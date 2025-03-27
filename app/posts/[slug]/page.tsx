@@ -13,11 +13,8 @@ interface Post {
   };
 }
 
-interface PageParams {
-  slug: string;
-}
-
-export default async function PostPage({ params }: { params: PageParams }) {
+// Không cần định nghĩa PageParams, để Next.js tự suy ra kiểu
+export default async function PostPage({ params }: { params: { slug: string } }) {
   let posts: Post[];
   try {
     posts = await fetchAPI(`posts?slug=${params.slug}&_embed`);
