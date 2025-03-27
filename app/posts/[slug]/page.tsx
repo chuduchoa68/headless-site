@@ -2,6 +2,7 @@ import { fetchAPI } from '../../../lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Định nghĩa interface cho Post
 interface Post {
   id: number;
   title: { rendered: string };
@@ -13,7 +14,7 @@ interface Post {
   };
 }
 
-// Không cần định nghĩa PageParams, để Next.js tự suy ra kiểu
+// Không cần định nghĩa kiểu thủ công, để Next.js suy ra từ dynamic route
 export default async function PostPage({ params }: { params: { slug: string } }) {
   let posts: Post[];
   try {
