@@ -1,6 +1,7 @@
 import { fetchAPI } from '../../../lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { NextPage } from 'next'; // Import kiểu từ Next.js
 
 interface Post {
   id: number;
@@ -13,14 +14,13 @@ interface Post {
   };
 }
 
-export async function generateStaticParams() {
-  const posts = await fetchAPI('posts');
-  return posts.map((post: Post) => ({
-    slug: post.slug,
-  }));
+// Định nghĩa kiểu cho params
+interface PageParams {
+  slug: string;
 }
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
+// Sử dụng NextPage với params
+export default async function PostPage({ params }: { params: PageParams }) {
   let posts: Post[];
   try {
     posts = await fetchAPI(`posts?slug=${params.slug}&_embed`);
@@ -38,17 +38,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
       <header className="bg-blue-600 text-white py-6">
-        <div className="container max-w-3xl mx-auto px-4">
+        <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold">{post.title.rendered}</h1>
         </div>
       </header>
-
-      {/* Nội dung bài viết */}
-      <main className="container max-w-3xl mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         <article className="bg-white rounded-lg shadow-md p-8">
-          {/* Hình ảnh nổi bật */}
           {featuredImage && (
             <div className="mb-8">
               <Image
@@ -60,19 +56,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
               />
             </div>
           )}
-
-          {/* Metadata */}
           <div className="text-gray-600 text-base mb-6">
             Đăng ngày: {new Date(post.date).toLocaleDateString('vi-VN')}
           </div>
-
-          {/* Nội dung */}
           <div
             className="prose prose-lg prose-gray max-w-none leading-relaxed text-gray-800"
             dangerouslySetInnerHTML={{ __html: post.content.rendered }}
           />
-
-          {/* Nút quay lại */}
           <div className="mt-8">
             <Link
               href="/"
@@ -83,13 +73,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
           </div>
         </article>
       </main>
-
-      {/* Footer */}
       <footer className="bg-gray-800 text-white py-4 text-center">
         <p>© 2025 My Headless Blog</p>
       </footer>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const posts = await fetchAPI('posts');
+  return posts.map((post: Post) => ({
+    slug: post.slug,
+  }));
 }
 
 export const revalidate = 10;
