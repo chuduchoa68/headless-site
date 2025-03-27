@@ -1,7 +1,6 @@
 import { fetchAPI } from '../../../lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
-import type { NextPage } from 'next'; // Import kiểu từ Next.js
 
 interface Post {
   id: number;
@@ -14,12 +13,10 @@ interface Post {
   };
 }
 
-// Định nghĩa kiểu cho params
 interface PageParams {
   slug: string;
 }
 
-// Sử dụng NextPage với params
 export default async function PostPage({ params }: { params: PageParams }) {
   let posts: Post[];
   try {
