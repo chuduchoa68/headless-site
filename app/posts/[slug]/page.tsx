@@ -77,3 +77,30 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 }
 
 export const revalidate = 10;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+
+  let posts: Post[];
+  try {
+    posts = await fetchAPI(`posts?slug=${slug}&_embed`);
+  } catch (error) {
+    console.error('Error fetching post for metadata:', error);
+    return {
+      title: 'Bài viết không tồn tại | Xây dựng Minh Nhật',
+      description: 'Đã xảy ra lỗi khi tải bài viết.',
+    };
+  }
+
+  const post = posts[0];
+  if (!post) {
+    return {
+      title: 'Bài viết không tồn tại | Xây dựng Minh Nhật',
+      description: 'Không tìm thấy bài viết này.',
+    };
+  }
+
+  return {
+    title: `${post.title.rendered} | Xây dựng Minh Nhật`,
+    description: `Đọc bài viết ${post.title.rendered} từ Xây dựng Minh Nhật.`,
+  };
+}
