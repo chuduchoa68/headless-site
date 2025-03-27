@@ -2,7 +2,6 @@ import { fetchAPI } from '../../../lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
 
-// Định nghĩa interface cho Post
 interface Post {
   id: number;
   title: { rendered: string };
@@ -14,14 +13,16 @@ interface Post {
   };
 }
 
-// Không cần định nghĩa kiểu thủ công, để Next.js suy ra từ dynamic route
-export default async function PostPage({ params }: { params: { slug: string } }) {
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params để lấy slug
+  const { slug } = await params;
+
   let posts: Post[];
   try {
-    posts = await fetchAPI(`posts?slug=${params.slug}&_embed`);
+    posts = await fetchAPI(`posts?slug=${slug}&_embed`);
   } catch (error) {
     console.error('Error fetching post:', error);
-    return <div className="text-center text-red-500">Lỗi khi tải bài viết</div>;
+    return <div className="text-center text-red-500">Lỗi khi tải bài viết. Vui lòng thử lại sau.</div>;
   }
 
   const post = posts[0];
@@ -73,13 +74,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
       </footer>
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  const posts = await fetchAPI('posts');
-  return posts.map((post: Post) => ({
-    slug: post.slug,
-  }));
 }
 
 export const revalidate = 10;

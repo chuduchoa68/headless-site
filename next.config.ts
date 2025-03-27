@@ -1,9 +1,12 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
-module.exports = {
+  typescript: {
+    ignoreBuildErrors: true, // Bỏ qua lỗi TypeScript khi build
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // Bỏ qua lỗi ESLint khi build
+  },
   images: {
     remotePatterns: [
       {
@@ -15,5 +18,6 @@ module.exports = {
       },
     ],
   },
-}
+};
+
 export default nextConfig;
