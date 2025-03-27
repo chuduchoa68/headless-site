@@ -13,7 +13,7 @@ interface Post {
 
 export async function fetchAPI(endpoint: string): Promise<Post[]> {
   const url = `${API_URL}/${endpoint}`;
-  console.log('Fetching URL:', url); // Log URL để kiểm tra
+  console.log('Fetching from URL:', url); // Log URL đầy đủ
   try {
     const res = await fetch(url);
     if (!res.ok) {
@@ -25,6 +25,6 @@ export async function fetchAPI(endpoint: string): Promise<Post[]> {
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
-    throw error; // Ném lỗi để hiển thị trên UI
+    throw error;
   }
 }
